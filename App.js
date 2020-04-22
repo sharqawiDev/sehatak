@@ -1,114 +1,315 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
+/* eslint-disable no-lone-blocks */
+/* eslint-disable react-native/no-inline-styles */
+import React, {useState} from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
   View,
   Text,
-  StatusBar,
+  Button,
+  TextInput,
+  Image,
+  StyleSheet,
+  Dimensions,
+  ImageBackground,
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+// import groupImage from './images/Group5Copy3.png';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const {width, height} = Dimensions.get('window');
+function HomeScreen({navigation}) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
 
-const App: () => React$Node = () => {
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Image style={styles.logoStyle} source={require('./images/logo.png')} />
+
+      <View
+        style={{
+          width: '90%',
+          height: 48,
+          paddingLeft: 10,
+          marginBottom: 20,
+        }}>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: '500',
+            alignSelf: 'flex-start',
+            marginLeft: 10,
+          }}>
+          Full Name
+        </Text>
+        <TextInput
+          placeholder="Name"
+          style={{
+            backgroundColor: '#fff',
+            width: '100%',
+            height: 48,
+            borderRadius: 20,
+            paddingLeft: 10,
+            marginTop: 10,
+          }}
+          keyboardType="default"
+          onChangeText={(val) => setName(val)}
+          value={name}
+          maxLength={40}
+        />
+      </View>
+
+      <View
+        style={{
+          width: '90%',
+          height: 48,
+          paddingLeft: 10,
+          marginTop: 30,
+          marginBottom: 40,
+        }}>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: '500',
+            alignSelf: 'flex-start',
+            marginLeft: 10,
+          }}>
+          Email Address
+        </Text>
+        <TextInput
+          placeholder="Example@gmail.com"
+          style={{
+            backgroundColor: '#fff',
+            width: '100%',
+            height: 48,
+            borderRadius: 20,
+            paddingLeft: 10,
+            marginTop: 10,
+          }}
+          keyboardType="email-address"
+          onChangeText={(val) => setEmail(val)}
+          value={email}
+          maxLength={40}
+        />
+      </View>
+      {name === '' || email === '' ? (
+        <Button title="Login" />
+      ) : (
+        <Button
+          title="Login"
+          onPress={() => navigation.navigate('Details', {name})}
+        />
+      )}
+    </View>
   );
-};
+}
+
+function DetailsScreen({navigation, route}) {
+  const {name} = route.params;
+  return (
+    <ScrollView>
+      <View>
+        <View
+          style={{
+            alignItems: 'center',
+            marginBottom: 30,
+            paddingBottom: 20,
+          }}>
+          <ImageBackground
+            source={require('./images/bg.png')}
+            style={{
+              borderColor: '#000',
+              resizeMode: 'stretch',
+              height: height * 0.5,
+              width: width,
+            }}
+            imageStyle={{
+              borderBottomRightRadius: 50,
+              borderBottomLeftRadius: 50,
+            }}>
+            <Text
+              style={{
+                fontSize: 30,
+                alignSelf: 'center',
+                color: '#fff',
+                marginTop: 40,
+              }}>
+              Good Morning {'\n'}
+              {JSON.stringify(name)} {'\n'}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignSelf: 'center',
+                width: '90%',
+                marginTop: 150,
+              }}>
+              <TouchableOpacity style={styles.card}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text style={{alignSelf: 'center', fontSize: 18}}>Pulse</Text>
+                  <Image
+                    source={require('./images/oxygen.png')}
+                    style={styles.imageStyle}
+                  />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={{fontWeight: '500', fontSize: 25}}> 122</Text>
+                  <Text
+                    style={{
+                      fontWeight: '500',
+                      fontSize: 12,
+                      color: 'grey',
+                      alignSelf: 'center',
+                      marginLeft: 5,
+                    }}>
+                    BPM
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.card}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text style={{alignSelf: 'center', fontSize: 18}}>Pulse</Text>
+                  <Image
+                    source={require('./images/pulse.png')}
+                    style={styles.imageStyle}
+                  />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={{fontWeight: '500', fontSize: 25}}> 122</Text>
+                  <Text
+                    style={{
+                      fontWeight: '500',
+                      fontSize: 12,
+                      color: 'grey',
+                      alignSelf: 'center',
+                      marginLeft: 5,
+                    }}>
+                    BPM
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </ImageBackground>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '90%',
+              marginTop: 100,
+            }}>
+            <TouchableOpacity style={styles.card}>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={{alignSelf: 'center', fontSize: 18}}>Pulse</Text>
+                <Image
+                  source={require('./images/temp.png')}
+                  style={styles.imageStyle}
+                />
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{fontWeight: '500', fontSize: 25}}> 122</Text>
+                <Text
+                  style={{
+                    fontWeight: '500',
+                    fontSize: 12,
+                    color: 'grey',
+                    alignSelf: 'center',
+                    marginLeft: 5,
+                  }}>
+                  BPM
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.card}>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={{alignSelf: 'center', fontSize: 18}}>Pulse</Text>
+                <Image
+                  source={require('./images/pressure.png')}
+                  style={styles.imageStyle}
+                />
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{fontWeight: '500', fontSize: 25}}> 122</Text>
+                <Text
+                  style={{
+                    fontWeight: '500',
+                    fontSize: 12,
+                    color: 'grey',
+                    alignSelf: 'center',
+                    marginLeft: 5,
+                  }}>
+                  BPM
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
+  );
+}
+
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Details" component={DetailsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  imageStyle: {
+    width: 30,
+    height: 30,
+    borderRadius: 9,
+    marginTop: 10,
+    resizeMode: 'contain',
+    backgroundColor: '#fff',
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  card: {
+    backgroundColor: '#FFF',
+    width: width * 0.35,
+    height: 200,
+    borderRadius: 20,
+    shadowOffset: {height: 8, width: 4},
+    shadowColor: '#0003',
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    paddingHorizontal: 6,
   },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+  logoStyle: {
+    width: '100%',
+    height: '35%',
+    resizeMode: 'contain',
+    alignSelf: 'center',
   },
 });
-
 export default App;
+
+{
+  /* <Button
+        title="Go to Details... again"
+        onPress={() => navigation.push('Details')}
+      /> */
+}
+{
+  /* <Button title="Go to Home" onPress={() => navigation.navigate('Home')} /> */
+}
+{
+  /* <Button title="Go back" onPress={() => navigation.goBack()} /> */
+}
