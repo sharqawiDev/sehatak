@@ -17,6 +17,7 @@ import {
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {LineChart} from 'react-native-chart-kit';
+import {CheckBox} from 'native-base';
 
 const {width, height} = Dimensions.get('window');
 function HomeScreen({navigation}) {
@@ -523,18 +524,60 @@ function DetailsScreen({navigation, route}) {
   );
 }
 function Testing({navigation}) {
+  const [yes, setYes] = useState(false);
+  const [no, setNo] = useState(false);
+
+  const checked = () => {
+    setNo(false);
+    setYes(true);
+  };
+
+  const unChecked = () => {
+    setNo(true);
+    setYes(false);
+  };
+
   return (
     <View>
-      <Text
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          alignSelf: 'center',
-          fontSize: 30,
-          fontWeight: '500',
-        }}>
-        hi
-      </Text>
+      <View style={styles.qCard}>
+        <Text
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
+            fontSize: 20,
+            fontWeight: '500',
+          }}>
+          Do you have a dry cough?
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: 20,
+          }}>
+          <View style={{flexDirection: 'row', marginLeft: 20}}>
+            <Text> YES</Text>
+            <CheckBox
+              checked={yes}
+              color="green"
+              onPress={() => {
+                checked();
+              }}
+            />
+          </View>
+          <View style={{flexDirection: 'row', marginRight: 20}}>
+            <Text> NO</Text>
+            <CheckBox
+              checked={no}
+              color="green"
+              onPress={() => {
+                unChecked();
+              }}
+            />
+          </View>
+        </View>
+      </View>
     </View>
   );
 }
@@ -617,6 +660,20 @@ const styles = StyleSheet.create({
     height: '35%',
     resizeMode: 'contain',
     alignSelf: 'center',
+  },
+  qCard: {
+    borderRadius: 20,
+    borderWidth: 0,
+    shadowOffset: {height: 8, width: 4},
+    shadowColor: '#0003',
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 1,
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    marginHorizontal: 10,
+    marginVertical: 20,
+    paddingVertical: 10,
   },
 });
 export default App;
