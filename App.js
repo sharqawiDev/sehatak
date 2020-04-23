@@ -14,12 +14,16 @@ import {
   ScrollView,
   Alert,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {LineChart} from 'react-native-chart-kit';
-import {CheckBox} from 'native-base';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
+
+
 
 const {width, height} = Dimensions.get('window');
 function HomeScreen({navigation}) {
@@ -108,10 +112,28 @@ function HomeScreen({navigation}) {
   );
 }
 
+function wait() {
+  return new Promise(resolve => {
+    setTimeout(resolve, 1500);
+  });
+}
 function DetailsScreen({navigation, route}) {
   const {name} = route.params;
+ 
+  const [refreshing, setRefreshing] = React.useState(false);
+ 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+
+    wait(2000).then(() => setRefreshing(false));
+  }, [refreshing]);
   return (
-    <ScrollView>
+    <ScrollView 
+      contentContainerStyle={styles.scrollView}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View>
         <View
           style={{
@@ -134,10 +156,10 @@ function DetailsScreen({navigation, route}) {
               style={{
                 fontSize: 45,
                 color: '#fff',
-                marginTop: 140,
+                marginTop: 160,
                 marginLeft: 30,
                 fontWeight: '300',
-                // fontFamily: 'arial', //tahoma, verdana, arial;
+                // fontFamily: 'montserrat', //tahoma, verdana, arial;
               }}>
               Good Morning {'\n'}
               {name}
@@ -148,7 +170,7 @@ function DetailsScreen({navigation, route}) {
                 justifyContent: 'space-between',
                 alignSelf: 'center',
                 width: '90%',
-                marginTop: 50,
+                marginTop: 80,
               }}>
               <TouchableOpacity style={styles.card}>
                 <View
@@ -333,7 +355,7 @@ function DetailsScreen({navigation, route}) {
               flexDirection: 'row',
               justifyContent: 'space-between',
               width: '90%',
-              marginTop: 80,
+              marginTop: 120,
             }}>
             <TouchableOpacity style={styles.card}>
               <View
@@ -549,7 +571,7 @@ const Question = ({question}) => {
   };
 
   return (
-    <View style={{paddingBottom: 10}}>
+    <View style={{paddingBottom: 10, marginTop:10}}>
       <View style={styles.qCard}>
         <Text
           style={{
@@ -630,7 +652,7 @@ function Testing({navigation}) {
           style={{
             fontSize: 20,
             alignSelf: 'center',
-
+            marginTop:20,
             fontWeight: 'bold',
           }}>
           Please Answer the following questions:
@@ -641,7 +663,7 @@ function Testing({navigation}) {
         <TouchableOpacity
           style={{
             alignSelf: 'center',
-            backgroundColor: 'green',
+            backgroundColor: '#006837',
             borderColor: 'grey',
             borderWidth: 1,
             justifyContent: 'center',
@@ -666,31 +688,131 @@ function Testing({navigation}) {
     </SafeAreaView>
   );
 }
-const Stack = createStackNavigator();
 
-function App() {
+function Stastics({navigation}) {
+  var hours = new Date().getHours();
+  var min = new Date().getMinutes()
+  var sec = new Date().getSeconds(); 
+
+  return (
+    <SafeAreaView>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={{flexDirection:'row', marginVertical:20}}>
+       <Image source={require('./images/dut.png')} style={{width:20, height:20,marginLeft:10, alignSelf:'center', marginTop:5 }}/>
+       <Text style={{fontWeight:'500', fontSize:25,marginLeft:10}}>Today</Text>
+  <Text style={{fontSize:16,color:'#a3a3a3',marginLeft:10,marginTop:10, alignSelf:'center'}}>{hours}{":"}{min}{" pm"}</Text>
+        </View>
+        <View style={styles.stasticsCard}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View>
+              <Text
+                style={{
+                  textAlign: 'left',
+                  paddingTop: 20,
+                  fontSize: 22,
+                  marginLeft: 10,
+                  fontWeight:'500'
+                }}>
+                Pulse
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                borderLeftColor: '#dedede',
+                borderLeftWidth: 1,
+                marginTop: 10,
+                marginLeft: 60,
+                paddingLeft: 10,
+              }}>
+              <Text style={{paddingTop: 5, fontSize: 22, color: 'red'}}>
+                89
+              </Text>
+              <Text
+                style={{
+                  paddingTop: 10,
+                  paddingRight: 40,
+                  fontSize: 12,
+                  color: '#000',
+                  alignSelf: 'center',
+                  fontWeight: 'bold',
+                }}>
+                BPM
+              </Text>
+            </View>
+          </View>
+          <Text style={{textAlign: 'right', paddingRight: 10, fontSize: 12}}>
+            Average
+          </Text>
+          <View style={{flexDirection: 'row', flex: 1, justifyContent:'space-between',paddingHorizontal:10}}>
+            <Image style={styles.warringCard} source={require('./images/g-1.png')} />
+            <Text
+              style={{
+                alignSelf: 'center',
+                fontWeight: '400',
+                fontSize: 22,
+                marginRight:100,
+                marginTop:10,
+                fontFamily: 'verdana',
+              }}>
+              GOOD
+            </Text>
+            <Image style={[styles.warringCard, styles.imageAlign]} source={require('./images/pulse.png')} />
+          </View>
+        </View>
+      </View>
+    </ScrollView>
+    </SafeAreaView>
+  );
+}
+const Drawer = createDrawerNavigator();
+
+function App({navigation}) {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            title: '',
-            headerStyle: {
-              backgroundColor: '#006837',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          }}
-        />
-        <Stack.Screen
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen
           name="Details"
           component={DetailsScreen}
           options={{
-            title: '',
+            title: 'Home Page',
+            headerStyle: {
+              backgroundColor: '#006837',
+            },
+            headerTintColor: '#fff',
+            headerLeft: () => (
+              <TouchableOpacity >
+              <Image
+                source={require('./images/menu.png')}
+                style={{height:17,width:25, marginLeft:10}}
+              />
+              </TouchableOpacity>
+            ),
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+         <Drawer.Screen
+         name="stastics"
+         component={Stastics}
+         options={{
+           title: 'history',
+           headerStyle: {
+             backgroundColor: '#006837',
+           },
+           headerTintColor: '#fff',
+           headerTitleStyle: {
+             fontWeight: 'bold',
+           },
+         }}
+         />
+         <Drawer.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: 'Logout',
             headerStyle: {
               backgroundColor: '#006837',
             },
@@ -700,7 +822,7 @@ function App() {
             },
           }}
         />
-        <Stack.Screen
+        <Drawer.Screen
           name="Test"
           component={Testing}
           options={{
@@ -714,12 +836,18 @@ function App() {
             },
           }}
         />
-      </Stack.Navigator>
+       </Drawer.Navigator>
     </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingTop: 20,
+    padding: 8,
+  },
   imageStyle: {
     width: 40,
     height: 40,
@@ -749,16 +877,46 @@ const styles = StyleSheet.create({
   qCard: {
     borderRadius: 20,
     borderWidth: 0,
-    shadowOffset: {height: 8, width: 4},
+    shadowOffset: {height: 0, width: 0},
     shadowColor: '#0003',
     shadowOpacity: 0.5,
-    shadowRadius: 8,
+    shadowRadius: 20,
     elevation: 1,
     justifyContent: 'center',
     backgroundColor: '#fff',
     marginHorizontal: 10,
     marginVertical: 20,
     paddingVertical: 10,
+  },
+  stasticsCard: {
+    backgroundColor: '#FFF',
+    height: 130,
+    borderRadius: 20,
+    borderColor: '#dedede',
+    borderWidth: 0.5,
+    shadowOffset: {height: 8, width: 4},
+    shadowColor: '#0003',
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    paddingHorizontal: 10,
+    width: '80%',
+    alignSelf:'center'
+  },
+  warringCard: {
+    backgroundColor: '#dedede',
+    height: 40,
+    width: 40,
+    borderRadius: 10,
+    shadowOffset: {height: 8, width: 4},
+    shadowColor: '#0003',
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    paddingHorizontal: 6,
+    marginTop: 20,
+  },
+  imageAlign: {
+    backgroundColor:'#fff'
+
   },
 });
 export default App;
