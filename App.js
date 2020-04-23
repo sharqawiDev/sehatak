@@ -19,6 +19,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {LineChart} from 'react-native-chart-kit';
 import {CheckBox} from 'native-base';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 function HomeScreen({navigation}) {
@@ -548,7 +549,7 @@ const Question = ({question}) => {
   };
 
   return (
-    <View>
+    <View style={{paddingBottom: 10}}>
       <View style={styles.qCard}>
         <Text
           style={{
@@ -623,46 +624,46 @@ function Testing({navigation}) {
   ];
 
   return (
-    <ScrollView>
-      <Text
-        style={{
-          fontSize: 20,
-          alignSelf: 'center',
-          marginVertical: 10,
-          fontWeight: 'bold',
-        }}>
-        Please Answer the following questions:
-      </Text>
-      {questions.map((question, index) => (
-        <Question key={index} question={question} />
-      ))}
-      <TouchableOpacity
-        style={{
-          alignSelf: 'center',
-          marginVertical: 15,
-          backgroundColor: 'green',
-          borderColor: 'grey',
-          borderWidth: 1,
-          borderRadius: 5,
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: 100,
-          height: 30,
-        }}
-        onPress={() => {
-          Alert.alert('Thanks for doing the test 😘');
-          navigation.goBack();
-        }}>
+    <SafeAreaView>
+      <ScrollView>
         <Text
           style={{
-            color: 'white',
             fontSize: 20,
-            fontWeight: '500',
+            alignSelf: 'center',
+
+            fontWeight: 'bold',
           }}>
-          Submit
+          Please Answer the following questions:
         </Text>
-      </TouchableOpacity>
-    </ScrollView>
+        {questions.map((question, index) => (
+          <Question key={index} question={question} />
+        ))}
+        <TouchableOpacity
+          style={{
+            alignSelf: 'center',
+            backgroundColor: 'green',
+            borderColor: 'grey',
+            borderWidth: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+          }}
+          onPress={() => {
+            Alert.alert('Thanks for doing the test 😘');
+            navigation.goBack();
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 20,
+              padding: 20,
+              fontWeight: '500',
+            }}>
+            Submit
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 const Stack = createStackNavigator();
