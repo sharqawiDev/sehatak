@@ -12,6 +12,7 @@ import {
   Dimensions,
   ImageBackground,
   ScrollView,
+  Alert,
   TouchableOpacity,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -523,18 +524,21 @@ function DetailsScreen({navigation, route}) {
     </ScrollView>
   );
 }
-function Testing({navigation}) {
+
+const Question = ({question}) => {
   const [yes, setYes] = useState(false);
   const [no, setNo] = useState(false);
 
   const checked = () => {
     setNo(false);
     setYes(true);
+    question.answer = 'Yes';
   };
 
   const unChecked = () => {
     setNo(true);
     setYes(false);
+    question.answer = 'No';
   };
 
   return (
@@ -548,7 +552,7 @@ function Testing({navigation}) {
             fontSize: 20,
             fontWeight: '500',
           }}>
-          Do you have a dry cough?
+          {question.title}
         </Text>
         <View
           style={{
@@ -579,6 +583,34 @@ function Testing({navigation}) {
         </View>
       </View>
     </View>
+  );
+};
+
+function Testing({navigation}) {
+  const questions = [
+    {title: 'Do you have a dry cough?', answer: ''},
+    {title: 'Do you have breathing difficulties?', answer: ''},
+    {title: 'Do you have fever?', answer: ''},
+    {title: 'Do you have fatigue and fatigue?', answer: ''},
+    {title: 'Do you have runny nose', answer: ''},
+    {title: 'Do you have sore throat?', answer: ''},
+  ];
+
+  return (
+    <ScrollView>
+      {questions.map((question, index) => (
+        <Question key={index} question={question} />
+      ))}
+
+      <Button
+        title="Submit"
+        color={'green'}
+        onPress={() => {
+          Alert.alert('Thanks for doing the test 😘');
+          navigation.goBack();
+        }}
+      />
+    </ScrollView>
   );
 }
 const Stack = createStackNavigator();
