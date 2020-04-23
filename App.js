@@ -618,24 +618,50 @@ function Testing({navigation}) {
     {title: 'Do you have breathing difficulties?', answer: ''},
     {title: 'Do you have fever?', answer: ''},
     {title: 'Do you have fatigue and fatigue?', answer: ''},
-    {title: 'Do you have runny nose', answer: ''},
+    {title: 'Do you have runny nose?', answer: ''},
     {title: 'Do you have sore throat?', answer: ''},
   ];
 
   return (
     <ScrollView>
+      <Text
+        style={{
+          fontSize: 20,
+          alignSelf: 'center',
+          marginVertical: 10,
+          fontWeight: 'bold',
+        }}>
+        Please Answer the following questions:
+      </Text>
       {questions.map((question, index) => (
         <Question key={index} question={question} />
       ))}
-
-      <Button
-        title="Submit"
-        color={'green'}
+      <TouchableOpacity
+        style={{
+          alignSelf: 'center',
+          marginVertical: 15,
+          backgroundColor: 'green',
+          borderColor: 'grey',
+          borderWidth: 1,
+          borderRadius: 5,
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 100,
+          height: 30,
+        }}
         onPress={() => {
           Alert.alert('Thanks for doing the test 😘');
           navigation.goBack();
-        }}
-      />
+        }}>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 20,
+            fontWeight: '500',
+          }}>
+          Submit
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
