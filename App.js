@@ -526,19 +526,25 @@ function DetailsScreen({navigation, route}) {
 }
 
 const Question = ({question}) => {
-  const [yes, setYes] = useState(false);
-  const [no, setNo] = useState(false);
+  const [yesColor, setYesColor] = useState('white');
+  const [noColor, setNoColor] = useState('white');
+  const [yesText, setYesText] = useState('black');
+  const [noText, setNoText] = useState('black');
 
   const checked = () => {
-    setNo(false);
-    setYes(true);
     question.answer = 'Yes';
+    setYesColor('green');
+    setYesText('white');
+    setNoColor('white');
+    setNoText('black');
   };
 
   const unChecked = () => {
-    setNo(true);
-    setYes(false);
     question.answer = 'No';
+    setNoColor('red');
+    setNoText('white');
+    setYesColor('white');
+    setYesText('black');
   };
 
   return (
@@ -561,24 +567,44 @@ const Question = ({question}) => {
             marginTop: 20,
           }}>
           <View style={{flexDirection: 'row', marginLeft: 20}}>
-            <Text> YES</Text>
-            <CheckBox
-              checked={yes}
-              color="green"
-              onPress={() => {
-                checked();
+            <TouchableOpacity
+              style={{
+                borderColor: 'grey',
+                borderWidth: 1,
+                borderRadius: 5,
+                backgroundColor: yesColor,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 60,
+                height: 30,
+                flexDirection: 'row',
               }}
-            />
+              onPress={() => checked()}>
+              <Text style={{color: yesText, fontSize: 20, fontWeight: 'bold'}}>
+                {' '}
+                YES
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row', marginRight: 20}}>
-            <Text> NO</Text>
-            <CheckBox
-              checked={no}
-              color="green"
-              onPress={() => {
-                unChecked();
+            <TouchableOpacity
+              style={{
+                borderColor: 'grey',
+                borderWidth: 1,
+                borderRadius: 5,
+                backgroundColor: noColor,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 60,
+                height: 30,
+                flexDirection: 'row',
               }}
-            />
+              onPress={() => unChecked()}>
+              <Text style={{color: noText, fontSize: 20, fontWeight: 'bold'}}>
+                {' '}
+                NO
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
