@@ -148,6 +148,29 @@ function DetailsScreen({navigation, route}) {
               borderBottomRightRadius: 50,
               borderBottomLeftRadius: 50,
             }}>
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <Image
+                source={require('./images/menu.png')}
+                style={{
+                  position: 'absolute',
+                  width: 25,
+                  height: 25,
+                  top: 70,
+                  left: 20,
+                }}
+              />
+            </TouchableOpacity>
+            <Image
+              source={require('./images/avatar.jpg')}
+              style={{
+                position: 'absolute',
+                width: 50,
+                height: 50,
+                borderRadius: 10,
+                top: 60,
+                right: 20,
+              }}
+            />
             <Text
               style={{
                 fontSize: 45,
@@ -306,6 +329,7 @@ function DetailsScreen({navigation, route}) {
                     datasets: [
                       {
                         data: [
+                          parseInt(75 + Math.random() * (100 - 75)),
                           Math.random() * 100,
                           Math.random() * 100,
                           Math.random() * 100,
@@ -726,6 +750,157 @@ function Stastics({navigation}) {
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginLeft: 10,
+                    marginBottom: 10,
+                    backgroundColor: 'red',
+                    // height: '80%',
+                  }}>
+                  <Image
+                    style={styles.warringCard}
+                    source={require('./images/oxygen.png')}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 22,
+                      marginLeft: 5,
+                      paddingTop: 10,
+                      fontWeight: '500',
+                    }}>
+                    Oxygen
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  borderLeftColor: '#dedede',
+                  borderLeftWidth: 1,
+                  marginTop: 10,
+
+                  paddingLeft: 10,
+                }}>
+                <Text style={{paddingTop: 5, fontSize: 22, color: 'red'}}>
+                  83
+                </Text>
+                <Text
+                  style={{
+                    paddingTop: 10,
+                    paddingRight: 40,
+                    fontSize: 12,
+                    color: '#000',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                  }}>
+                  mmHg
+                </Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                flex: 1,
+                justifyContent: 'space-between',
+                paddingHorizontal: 10,
+                backgroundColor: 'blue',
+              }}>
+              <Image
+                style={styles.warringCard}
+                source={require('./images/g-1.png')}
+              />
+              <Text
+                style={{
+                  alignSelf: 'center',
+                  fontWeight: '400',
+                  fontSize: 22,
+                  marginRight: 100,
+                  marginTop: 10,
+                  fontFamily: 'verdana',
+                }}>
+                GOOD
+              </Text>
+            </View>
+          </View>
+          <View style={styles.stasticsCard}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View>
+                <Text
+                  style={{
+                    textAlign: 'left',
+                    paddingTop: 20,
+                    fontSize: 22,
+                    marginLeft: 10,
+                    fontWeight: '500',
+                  }}>
+                  Temperature
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  borderLeftColor: '#dedede',
+                  borderLeftWidth: 1,
+                  marginTop: 10,
+                  marginLeft: 60,
+                  paddingLeft: 10,
+                }}>
+                <Text style={{paddingTop: 5, fontSize: 22, color: 'red'}}>
+                  36.5
+                </Text>
+                <Text
+                  style={{
+                    paddingTop: 10,
+                    paddingRight: 40,
+                    fontSize: 12,
+                    color: '#000',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                  }}>
+                  °C
+                </Text>
+              </View>
+            </View>
+            <Text style={{textAlign: 'right', paddingRight: 10, fontSize: 12}}>
+              Average
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                flex: 1,
+                justifyContent: 'space-between',
+                paddingHorizontal: 10,
+              }}>
+              <Image
+                style={styles.warringCard}
+                source={require('./images/g-1.png')}
+              />
+              <Text
+                style={{
+                  alignSelf: 'center',
+                  fontWeight: '400',
+                  fontSize: 22,
+                  marginRight: 100,
+                  marginTop: 10,
+                  fontFamily: 'verdana',
+                }}>
+                GOOD
+              </Text>
+              <Image
+                style={[styles.warringCard, styles.imageAlign]}
+                source={require('./images/temp.png')}
+              />
+            </View>
+          </View>
+          <View style={styles.stasticsCard}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View>
                 <Text
                   style={{
                     textAlign: 'left',
@@ -790,6 +965,77 @@ function Stastics({navigation}) {
               <Image
                 style={[styles.warringCard, styles.imageAlign]}
                 source={require('./images/pulse.png')}
+              />
+            </View>
+          </View>
+          <View style={styles.stasticsCard}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View>
+                <Text
+                  style={{
+                    textAlign: 'left',
+                    paddingTop: 20,
+                    fontSize: 22,
+                    marginLeft: 10,
+                    fontWeight: '500',
+                  }}>
+                  Blood Pressure
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  borderLeftColor: '#dedede',
+                  borderLeftWidth: 1,
+                  marginTop: 10,
+                  marginLeft: 60,
+                  paddingLeft: 10,
+                }}>
+                <Text style={{paddingTop: 5, fontSize: 22, color: 'red'}}>
+                  110/70
+                </Text>
+                <Text
+                  style={{
+                    paddingTop: 10,
+                    paddingRight: 40,
+                    fontSize: 12,
+                    color: '#000',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                  }}>
+                  mmHg
+                </Text>
+              </View>
+            </View>
+            <Text style={{textAlign: 'right', paddingRight: 10, fontSize: 12}}>
+              Average
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                flex: 1,
+                justifyContent: 'space-between',
+                paddingHorizontal: 10,
+              }}>
+              <Image
+                style={styles.warringCard}
+                source={require('./images/g-1.png')}
+              />
+              <Text
+                style={{
+                  alignSelf: 'center',
+                  fontWeight: '400',
+                  fontSize: 22,
+                  marginRight: 100,
+                  marginTop: 10,
+                  fontFamily: 'verdana',
+                }}>
+                GOOD
+              </Text>
+              <Image
+                style={[styles.warringCard, styles.imageAlign]}
+                source={require('./images/pressure.png')}
               />
             </View>
           </View>
@@ -925,13 +1171,10 @@ const styles = StyleSheet.create({
     height: 130,
     borderRadius: 20,
     borderColor: '#dedede',
-    borderWidth: 0.5,
-    shadowOffset: {height: 8, width: 4},
-    shadowColor: '#0003',
-    shadowOpacity: 0.5,
-    shadowRadius: 20,
+    borderWidth: 1,
     paddingHorizontal: 10,
-    width: '80%',
+    marginVertical: 5,
+    width: '95%',
     alignSelf: 'center',
   },
   warringCard: {
@@ -944,7 +1187,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 20,
     paddingHorizontal: 6,
-    marginTop: 20,
+    alignSelf: 'center',
   },
   imageAlign: {
     backgroundColor: '#fff',
