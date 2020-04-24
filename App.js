@@ -20,10 +20,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {LineChart} from 'react-native-chart-kit';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-
-
-
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const {width, height} = Dimensions.get('window');
 function HomeScreen({navigation}) {
@@ -113,27 +110,26 @@ function HomeScreen({navigation}) {
 }
 
 function wait() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, 1500);
   });
 }
 function DetailsScreen({navigation, route}) {
   const {name} = route.params;
- 
+
   const [refreshing, setRefreshing] = React.useState(false);
- 
+
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
 
     wait(2000).then(() => setRefreshing(false));
   }, [refreshing]);
   return (
-    <ScrollView 
+    <ScrollView
       contentContainerStyle={styles.scrollView}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
+      }>
       <View>
         <View
           style={{
@@ -571,7 +567,7 @@ const Question = ({question}) => {
   };
 
   return (
-    <View style={{paddingBottom: 10, marginTop:10}}>
+    <View style={{paddingBottom: 10, marginTop: 10}}>
       <View style={styles.qCard}>
         <Text
           style={{
@@ -652,7 +648,7 @@ function Testing({navigation}) {
           style={{
             fontSize: 20,
             alignSelf: 'center',
-            marginTop:20,
+            marginTop: 20,
             fontWeight: 'bold',
           }}>
           Please Answer the following questions:
@@ -691,78 +687,114 @@ function Testing({navigation}) {
 
 function Stastics({navigation}) {
   var hours = new Date().getHours();
-  var min = new Date().getMinutes()
-  var sec = new Date().getSeconds(); 
+  var min = new Date().getMinutes();
+  var sec = new Date().getSeconds();
 
   return (
     <SafeAreaView>
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={{flexDirection:'row', marginVertical:20}}>
-       <Image source={require('./images/dut.png')} style={{width:20, height:20,marginLeft:10, alignSelf:'center', marginTop:5 }}/>
-       <Text style={{fontWeight:'500', fontSize:25,marginLeft:10}}>Today</Text>
-  <Text style={{fontSize:16,color:'#a3a3a3',marginLeft:10,marginTop:10, alignSelf:'center'}}>{hours}{":"}{min}{" pm"}</Text>
-        </View>
-        <View style={styles.stasticsCard}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View>
-              <Text
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={{flexDirection: 'row', marginVertical: 20}}>
+            <Image
+              source={require('./images/dut.png')}
+              style={{
+                width: 20,
+                height: 20,
+                marginLeft: 10,
+                alignSelf: 'center',
+                marginTop: 5,
+              }}
+            />
+            <Text style={{fontWeight: '500', fontSize: 25, marginLeft: 10}}>
+              Today
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                color: '#a3a3a3',
+                marginLeft: 10,
+                marginTop: 10,
+                alignSelf: 'center',
+              }}>
+              {hours}
+              {':'}
+              {min}
+              {' pm'}
+            </Text>
+          </View>
+          <View style={styles.stasticsCard}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View>
+                <Text
+                  style={{
+                    textAlign: 'left',
+                    paddingTop: 20,
+                    fontSize: 22,
+                    marginLeft: 10,
+                    fontWeight: '500',
+                  }}>
+                  Pulse
+                </Text>
+              </View>
+              <View
                 style={{
-                  textAlign: 'left',
-                  paddingTop: 20,
-                  fontSize: 22,
-                  marginLeft: 10,
-                  fontWeight:'500'
+                  flexDirection: 'row',
+                  borderLeftColor: '#dedede',
+                  borderLeftWidth: 1,
+                  marginTop: 10,
+                  marginLeft: 60,
+                  paddingLeft: 10,
                 }}>
-                Pulse
-              </Text>
+                <Text style={{paddingTop: 5, fontSize: 22, color: 'red'}}>
+                  89
+                </Text>
+                <Text
+                  style={{
+                    paddingTop: 10,
+                    paddingRight: 40,
+                    fontSize: 12,
+                    color: '#000',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                  }}>
+                  BPM
+                </Text>
+              </View>
             </View>
+            <Text style={{textAlign: 'right', paddingRight: 10, fontSize: 12}}>
+              Average
+            </Text>
             <View
               style={{
                 flexDirection: 'row',
-                borderLeftColor: '#dedede',
-                borderLeftWidth: 1,
-                marginTop: 10,
-                marginLeft: 60,
-                paddingLeft: 10,
+                flex: 1,
+                justifyContent: 'space-between',
+                paddingHorizontal: 10,
               }}>
-              <Text style={{paddingTop: 5, fontSize: 22, color: 'red'}}>
-                89
-              </Text>
+              <Image
+                style={styles.warringCard}
+                source={require('./images/g-1.png')}
+              />
               <Text
                 style={{
-                  paddingTop: 10,
-                  paddingRight: 40,
-                  fontSize: 12,
-                  color: '#000',
                   alignSelf: 'center',
-                  fontWeight: 'bold',
+                  fontWeight: '400',
+                  fontSize: 22,
+                  marginRight: 100,
+                  marginTop: 10,
+                  fontFamily: 'verdana',
                 }}>
-                BPM
+                GOOD
               </Text>
+              <Image
+                style={[styles.warringCard, styles.imageAlign]}
+                source={require('./images/pulse.png')}
+              />
             </View>
           </View>
-          <Text style={{textAlign: 'right', paddingRight: 10, fontSize: 12}}>
-            Average
-          </Text>
-          <View style={{flexDirection: 'row', flex: 1, justifyContent:'space-between',paddingHorizontal:10}}>
-            <Image style={styles.warringCard} source={require('./images/g-1.png')} />
-            <Text
-              style={{
-                alignSelf: 'center',
-                fontWeight: '400',
-                fontSize: 22,
-                marginRight:100,
-                marginTop:10,
-                fontFamily: 'verdana',
-              }}>
-              GOOD
-            </Text>
-            <Image style={[styles.warringCard, styles.imageAlign]} source={require('./images/pulse.png')} />
-          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -782,11 +814,11 @@ function App({navigation}) {
             },
             headerTintColor: '#fff',
             headerLeft: () => (
-              <TouchableOpacity >
-              <Image
-                source={require('./images/menu.png')}
-                style={{height:17,width:25, marginLeft:10}}
-              />
+              <TouchableOpacity>
+                <Image
+                  source={require('./images/menu.png')}
+                  style={{height: 17, width: 25, marginLeft: 10}}
+                />
               </TouchableOpacity>
             ),
             headerTitleStyle: {
@@ -794,21 +826,21 @@ function App({navigation}) {
             },
           }}
         />
-         <Drawer.Screen
-         name="stastics"
-         component={Stastics}
-         options={{
-           title: 'history',
-           headerStyle: {
-             backgroundColor: '#006837',
-           },
-           headerTintColor: '#fff',
-           headerTitleStyle: {
-             fontWeight: 'bold',
-           },
-         }}
-         />
-         <Drawer.Screen
+        <Drawer.Screen
+          name="stastics"
+          component={Stastics}
+          options={{
+            title: 'history',
+            headerStyle: {
+              backgroundColor: '#006837',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        <Drawer.Screen
           name="Home"
           component={HomeScreen}
           options={{
@@ -836,7 +868,7 @@ function App({navigation}) {
             },
           }}
         />
-       </Drawer.Navigator>
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }
@@ -900,7 +932,7 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     paddingHorizontal: 10,
     width: '80%',
-    alignSelf:'center'
+    alignSelf: 'center',
   },
   warringCard: {
     backgroundColor: '#dedede',
@@ -915,8 +947,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   imageAlign: {
-    backgroundColor:'#fff'
-
+    backgroundColor: '#fff',
   },
 });
 export default App;
