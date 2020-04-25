@@ -18,12 +18,42 @@ import {
   RefreshControl,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+// import {createStackNavigator} from '@react-navigation/stack';
 import {LineChart} from 'react-native-chart-kit';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const {width, height} = Dimensions.get('window');
+
+let apiUri = 'http://sehatak-api.herokuapp.com/symptoms_qustions/add';
+
+// const [national_id, setNational_id] = useState('1010101010');
+// const [full_name, setFull_name] = useState('userName');
+// const [dry_cough, setDry_cough] = useState('false');
+// const [breathing_difficulties, setBreathing_difficulties] = useState('false');
+// const [fever, setFever] = useState('false');
+// const [runny_nose, setRunny_nose] = useState('false');
+// const [sore_throat, setSore_throat] = useState('false');
+
+const postData = async () => {
+  fetch(apiUri, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      national_id: 1089813834,
+      full_name: 'Mohammed Abdullah Salmeen',
+      dry_cough: true,
+      breathing_difficulties: true,
+      fever: true,
+      runny_nose: true,
+      sore_throat: true,
+    }),
+  });
+};
+
 function HomeScreen({navigation}) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -694,6 +724,7 @@ function Testing({navigation}) {
           onPress={() => {
             Alert.alert('Thanks for doing the test 😘');
             navigation.goBack();
+            postData();
           }}>
           <Text
             style={{
