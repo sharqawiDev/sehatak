@@ -655,7 +655,6 @@ const Question = ({question}) => {
               }}
               onPress={() => checked()}>
               <Text style={{color: yesText, fontSize: 20, fontWeight: 'bold'}}>
-                {' '}
                 YES
               </Text>
             </TouchableOpacity>
@@ -750,6 +749,9 @@ function Stastics({navigation}) {
     <SafeAreaView>
       <ScrollView>
         <View style={styles.container}>
+          <Text style={{alignSelf: 'center', fontSize: 25, fontWeight: 'bold'}}>
+            History
+          </Text>
           <View style={{flexDirection: 'row', marginVertical: 20}}>
             <Image
               source={require('./images/dut.png')}
@@ -775,7 +777,6 @@ function Stastics({navigation}) {
               {hours}
               {':'}
               {min}
-              {' pm'}
             </Text>
           </View>
           <View style={styles.stasticsCard}>
@@ -840,17 +841,17 @@ function Stastics({navigation}) {
               <View style={{flexDirection: 'row'}}>
                 <Image
                   style={styles.warringCard}
-                  source={require('./images/g-1.png')}
+                  source={require('./images/11.png')}
                 />
                 <Text
                   style={{
                     fontWeight: '400',
-                    fontSize: 22,
+                    fontSize: 20,
                     marginLeft: 10,
-                    marginTop: 25,
+                    alignSelf: 'center',
                     fontFamily: 'verdana',
                   }}>
-                  GOOD
+                  Normal
                 </Text>
               </View>
               {/* the graph should be here  */}
@@ -965,17 +966,17 @@ function Stastics({navigation}) {
               <View style={{flexDirection: 'row'}}>
                 <Image
                   style={styles.warringCard}
-                  source={require('./images/o-1.png')}
+                  source={require('./images/22.png')}
                 />
                 <Text
                   style={{
                     fontWeight: '400',
-                    fontSize: 22,
+                    fontSize: 20,
+                    alignSelf: 'center',
                     marginLeft: 10,
-                    marginTop: 25,
                     fontFamily: 'verdana',
                   }}>
-                  Normal
+                  Abnormal
                 </Text>
               </View>
               {/* the graph should be here  */}
@@ -1090,17 +1091,17 @@ function Stastics({navigation}) {
               <View style={{flexDirection: 'row'}}>
                 <Image
                   style={styles.warringCard}
-                  source={require('./images/r-1.png')}
+                  source={require('./images/33.png')}
                 />
                 <Text
                   style={{
                     fontWeight: '400',
-                    fontSize: 22,
+                    fontSize: 20,
+                    alignSelf: 'center',
                     marginLeft: 10,
-                    marginTop: 25,
                     fontFamily: 'verdana',
                   }}>
-                  Not Good
+                  Risky
                 </Text>
               </View>
               {/* the graph should be here  */}
@@ -1170,7 +1171,7 @@ function Stastics({navigation}) {
                   }}>
                   <Image
                     style={styles.warringCard}
-                    source={require('./images/oxygen.png')}
+                    source={require('./images/pressure.png')}
                   />
                   <Text
                     style={{
@@ -1215,17 +1216,17 @@ function Stastics({navigation}) {
               <View style={{flexDirection: 'row'}}>
                 <Image
                   style={styles.warringCard}
-                  source={require('./images/g-1.png')}
+                  source={require('./images/11.png')}
                 />
                 <Text
                   style={{
                     fontWeight: '400',
-                    fontSize: 22,
+                    fontSize: 20,
+                    alignSelf: 'center',
                     marginLeft: 10,
-                    marginTop: 25,
                     fontFamily: 'verdana',
                   }}>
-                  GOOD
+                  Normal
                 </Text>
               </View>
               {/* the graph should be here  */}
