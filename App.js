@@ -27,33 +27,6 @@ const {width, height} = Dimensions.get('window');
 
 let apiUri = 'http://sehatak-api.herokuapp.com/symptoms_qustions/add';
 
-// const [national_id, setNational_id] = useState('1010101010');
-// const [full_name, setFull_name] = useState('userName');
-// const [dry_cough, setDry_cough] = useState('false');
-// const [breathing_difficulties, setBreathing_difficulties] = useState('false');
-// const [fever, setFever] = useState('false');
-// const [runny_nose, setRunny_nose] = useState('false');
-// const [sore_throat, setSore_throat] = useState('false');
-
-const postData = async () => {
-  fetch(apiUri, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      national_id: 1089813834,
-      full_name: 'Mohammed Abdullah Salmeen',
-      dry_cough: true,
-      breathing_difficulties: true,
-      fever: true,
-      runny_nose: true,
-      sore_throat: true,
-    }),
-  });
-};
-
 function HomeScreen({navigation}) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -152,7 +125,6 @@ function DetailsScreen({navigation, route}) {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-
     wait(2000).then(() => setRefreshing(false));
   }, [refreshing]);
   return (
@@ -599,28 +571,11 @@ function DetailsScreen({navigation, route}) {
   );
 }
 
-const Question = ({question}) => {
-  const [yesColor, setYesColor] = useState('white');
-  const [noColor, setNoColor] = useState('white');
-  const [yesText, setYesText] = useState('black');
-  const [noText, setNoText] = useState('black');
-
-  const checked = () => {
-    question.answer = 'Yes';
-    setYesColor('green');
-    setYesText('white');
-    setNoColor('white');
-    setNoText('black');
-  };
-
-  const unChecked = () => {
-    question.answer = 'No';
-    setNoColor('red');
-    setNoText('white');
-    setYesColor('white');
-    setYesText('black');
-  };
-
+const Question = ({question, onYesPress, onNoPress, answer}) => {
+  const yesButtonColor = answer === true ? 'green' : 'white';
+  const yesTextColor = answer === true ? 'white' : 'black';
+  const noButtonColor = answer === false ? 'red' : 'white';
+  const noTextColor = answer === false ? 'white' : 'black';
   return (
     <View style={{paddingBottom: 10, marginTop: 10}}>
       <View style={styles.qCard}>
@@ -632,7 +587,7 @@ const Question = ({question}) => {
             fontSize: 20,
             fontWeight: '500',
           }}>
-          {question.title}
+          {question}
         </Text>
         <View
           style={{
@@ -646,15 +601,16 @@ const Question = ({question}) => {
                 borderColor: 'grey',
                 borderWidth: 1,
                 borderRadius: 5,
-                backgroundColor: yesColor,
+                backgroundColor: yesButtonColor,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 60,
                 height: 30,
                 flexDirection: 'row',
               }}
-              onPress={() => checked()}>
-              <Text style={{color: yesText, fontSize: 20, fontWeight: 'bold'}}>
+              onPress={onYesPress}>
+              <Text
+                style={{color: yesTextColor, fontSize: 20, fontWeight: 'bold'}}>
                 YES
               </Text>
             </TouchableOpacity>
@@ -665,16 +621,16 @@ const Question = ({question}) => {
                 borderColor: 'grey',
                 borderWidth: 1,
                 borderRadius: 5,
-                backgroundColor: noColor,
+                backgroundColor: noButtonColor,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: 60,
                 height: 30,
                 flexDirection: 'row',
               }}
-              onPress={() => unChecked()}>
-              <Text style={{color: noText, fontSize: 20, fontWeight: 'bold'}}>
-                {' '}
+              onPress={onNoPress}>
+              <Text
+                style={{color: noTextColor, fontSize: 20, fontWeight: 'bold'}}>
                 NO
               </Text>
             </TouchableOpacity>
@@ -686,14 +642,36 @@ const Question = ({question}) => {
 };
 
 function Testing({navigation}) {
-  const questions = [
-    {title: 'Do you have a dry cough?', answer: ''},
-    {title: 'Do you have breathing difficulties?', answer: ''},
-    {title: 'Do you have fever?', answer: ''},
-    {title: 'Do you have fatigue and fatigue?', answer: ''},
-    {title: 'Do you have runny nose?', answer: ''},
-    {title: 'Do you have sore throat?', answer: ''},
-  ];
+  // const [national_id, setNational_id] = useState('1010101010');
+  // const [full_name, setFull_name] = useState('userName');
+  const [dry_cough, setDry_cough] = useState();
+  const [breathing_difficulties, setBreathing_difficulties] = useState();
+  const [fever, setFever] = useState();
+  const [runny_nose, setRunny_nose] = useState();
+  const [sore_throat, setSore_throat] = useState();
+
+  const postData = async () => {
+    try {
+      fetch(apiUri, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          national_id: 1010101010,
+          full_name: 'Ayman Albasha',
+          dry_cough,
+          breathing_difficulties,
+          fever,
+          runny_nose,
+          sore_throat,
+        }),
+      });
+    } catch (er) {
+      console.warn(er);
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -707,9 +685,38 @@ function Testing({navigation}) {
           }}>
           Please Answer the following questions:
         </Text>
-        {questions.map((question, index) => (
-          <Question key={index} question={question} />
-        ))}
+
+        <Question
+          question={'Do you have a dry cough?'}
+          answer={dry_cough}
+          onYesPress={() => setDry_cough(true)}
+          onNoPress={() => setDry_cough(false)}
+        />
+        <Question
+          question={'Do you have breathing difficulties?'}
+          answer={breathing_difficulties}
+          onYesPress={() => setBreathing_difficulties(true)}
+          onNoPress={() => setBreathing_difficulties(false)}
+        />
+        <Question
+          question={'Do you have fever?'}
+          answer={fever}
+          onYesPress={() => setFever(true)}
+          onNoPress={() => setFever(false)}
+        />
+        <Question
+          question={'Do you have runny nose?'}
+          answer={runny_nose}
+          onYesPress={() => setRunny_nose(true)}
+          onNoPress={() => setRunny_nose(false)}
+        />
+        <Question
+          question={'Do you have sore throat?'}
+          answer={sore_throat}
+          onYesPress={() => setSore_throat(true)}
+          onNoPress={() => setSore_throat(false)}
+        />
+
         <TouchableOpacity
           style={{
             alignSelf: 'center',
