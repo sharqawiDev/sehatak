@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable radix */
 /* eslint-disable no-lone-blocks */
 /* eslint-disable react-native/no-inline-styles */
@@ -712,7 +713,7 @@ function Testing({navigation}) {
 function Stastics({navigation}) {
   var hours = new Date().getHours();
   var min = new Date().getMinutes();
-  var sec = new Date().getSeconds();
+  // var sec = new Date().getSeconds();
 
   return (
     <SafeAreaView>
@@ -748,7 +749,11 @@ function Stastics({navigation}) {
           </View>
           <View style={styles.stasticsCard}>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginVertical: 10,
+              }}>
               <View>
                 <View
                   style={{
@@ -756,9 +761,6 @@ function Stastics({navigation}) {
                     flexDirection: 'row',
                     alignItems: 'center',
                     marginLeft: 10,
-                    marginBottom: 10,
-                    backgroundColor: 'red',
-                    // height: '80%',
                   }}>
                   <Image
                     style={styles.warringCard}
@@ -767,8 +769,7 @@ function Stastics({navigation}) {
                   <Text
                     style={{
                       fontSize: 22,
-                      marginLeft: 5,
-                      paddingTop: 10,
+                      marginLeft: 10,
                       fontWeight: '500',
                     }}>
                     Oxygen
@@ -781,7 +782,6 @@ function Stastics({navigation}) {
                   borderLeftColor: '#dedede',
                   borderLeftWidth: 1,
                   marginTop: 10,
-
                   paddingLeft: 10,
                 }}>
                 <Text style={{paddingTop: 5, fontSize: 22, color: 'red'}}>
@@ -800,30 +800,76 @@ function Stastics({navigation}) {
                 </Text>
               </View>
             </View>
-
             <View
               style={{
                 flexDirection: 'row',
-                flex: 1,
                 justifyContent: 'space-between',
                 paddingHorizontal: 10,
-                backgroundColor: 'blue',
               }}>
-              <Image
-                style={styles.warringCard}
-                source={require('./images/g-1.png')}
-              />
-              <Text
+              <View style={{flexDirection: 'row'}}>
+                <Image
+                  style={styles.warringCard}
+                  source={require('./images/g-1.png')}
+                />
+                <Text
+                  style={{
+                    fontWeight: '400',
+                    fontSize: 22,
+                    marginLeft: 10,
+                    marginTop: 25,
+                    fontFamily: 'verdana',
+                  }}>
+                  GOOD
+                </Text>
+              </View>
+              {/* the graph should be here  */}
+              <LineChart
+                data={{
+                  labels: ['0', '1', '2', '3'],
+                  datasets: [
+                    {
+                      // data: [60, 100, 120],
+                      data: [
+                        Math.random() * 100,
+                        Math.random() * 100,
+                        Math.random() * 100,
+                        Math.random() * 100,
+                        Math.random() * 100,
+                        Math.random() * 100,
+                      ],
+                    },
+                  ],
+                }}
+                width={200}
+                height={70}
+                formatYLabel={(value) => `${value}`}
+                // yAxisLabel={"good"}
+                // withVerticalLabels={(value) => `${value}`}
+                // yAxisInterval={1} // optional, defaults to 1
+                chartConfig={{
+                  backgroundColor: '#000',
+                  backgroundGradientFrom: '#fff',
+                  backgroundGradientTo: '#fff',
+                  decimalPlaces: 0, // optional, defaults to 2dp
+                  color: (opacity = 1) => `rgba(000, 000, 000, ${opacity})`,
+                  labelColor: (opacity = 1) =>
+                    `rgba(000, 000, 000, ${opacity})`,
+                  style: {
+                    borderRadius: 16,
+                  },
+                  propsForDots: {
+                    r: '3',
+                    strokeWidth: '1',
+                    stroke: '#000',
+                  },
+                }}
+                bezier
                 style={{
+                  marginVertical: 8,
+                  borderRadius: 16,
                   alignSelf: 'center',
-                  fontWeight: '400',
-                  fontSize: 22,
-                  marginRight: 100,
-                  marginTop: 10,
-                  fontFamily: 'verdana',
-                }}>
-                GOOD
-              </Text>
+                }}
+              />
             </View>
           </View>
           <View style={styles.stasticsCard}>
@@ -878,7 +924,7 @@ function Stastics({navigation}) {
               }}>
               <Image
                 style={styles.warringCard}
-                source={require('./images/g-1.png')}
+                source={require('./images/o-1.png')}
               />
               <Text
                 style={{
@@ -889,7 +935,7 @@ function Stastics({navigation}) {
                   marginTop: 10,
                   fontFamily: 'verdana',
                 }}>
-                GOOD
+                Normal
               </Text>
               <Image
                 style={[styles.warringCard, styles.imageAlign]}
@@ -922,7 +968,7 @@ function Stastics({navigation}) {
                   paddingLeft: 10,
                 }}>
                 <Text style={{paddingTop: 5, fontSize: 22, color: 'red'}}>
-                  89
+                  140
                 </Text>
                 <Text
                   style={{
@@ -949,7 +995,7 @@ function Stastics({navigation}) {
               }}>
               <Image
                 style={styles.warringCard}
-                source={require('./images/g-1.png')}
+                source={require('./images/r-1.png')}
               />
               <Text
                 style={{
@@ -960,7 +1006,7 @@ function Stastics({navigation}) {
                   marginTop: 10,
                   fontFamily: 'verdana',
                 }}>
-                GOOD
+                Not Good
               </Text>
               <Image
                 style={[styles.warringCard, styles.imageAlign]}
@@ -1168,17 +1214,16 @@ const styles = StyleSheet.create({
   },
   stasticsCard: {
     backgroundColor: '#FFF',
-    height: 130,
+    height: 150,
     borderRadius: 20,
     borderColor: '#dedede',
     borderWidth: 1,
-    paddingHorizontal: 10,
     marginVertical: 5,
     width: '95%',
     alignSelf: 'center',
   },
   warringCard: {
-    backgroundColor: '#dedede',
+    backgroundColor: '#fff',
     height: 40,
     width: 40,
     borderRadius: 10,
