@@ -16,6 +16,7 @@ import {
   Alert,
   TouchableOpacity,
   RefreshControl,
+  AsyncStorage,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 // import {createStackNavigator} from '@react-navigation/stack';
@@ -29,7 +30,12 @@ let apiUri = 'http://sehatak-api.herokuapp.com/symptoms_qustions/add';
 
 function HomeScreen({navigation}) {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [ID, setID] = useState('');
+
+  const submit = async () => {
+    AsyncStorage.setItem('user', JSON.stringify({name, ID}));
+    navigation.navigate('Details', {name});
+  };
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -96,18 +102,15 @@ function HomeScreen({navigation}) {
             marginTop: 10,
           }}
           keyboardType="number-pad"
-          onChangeText={(val) => setEmail(val)}
-          value={email}
+          onChangeText={(val) => setID(val)}
+          value={ID}
           maxLength={40}
         />
       </View>
-      {name === '' || email === '' ? (
+      {name === '' || ID === '' ? (
         <Button title="Login" />
       ) : (
-        <Button
-          title="Login"
-          onPress={() => navigation.navigate('Details', {name})}
-        />
+        <Button title="Login" onPress={submit} />
       )}
     </View>
   );
@@ -652,6 +655,8 @@ function Testing({navigation}) {
   const [fatigue, setFatigue] = useState();
 
   const postData = async () => {
+    let user = await AsyncStorage.getItem('user');
+    user = JSON.parse(user);
     try {
       fetch(apiUri, {
         method: 'POST',
@@ -660,8 +665,8 @@ function Testing({navigation}) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          national_id: 1010101010,
-          full_name: 'Ayman Albasha',
+          national_id: user.ID,
+          full_name: user.name,
           dry_cough,
           breathing_difficulties,
           fever,
