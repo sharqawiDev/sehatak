@@ -577,7 +577,7 @@ const Question = ({question, onYesPress, onNoPress, answer}) => {
   const noButtonColor = answer === false ? 'red' : 'white';
   const noTextColor = answer === false ? 'white' : 'black';
   return (
-    <View style={{paddingBottom: 10, marginTop: 10}}>
+    <View style={{paddingBottom: 10, marginTop: 10, marginBottom: 20}}>
       <View style={styles.qCard}>
         <Text
           style={{
@@ -649,6 +649,7 @@ function Testing({navigation}) {
   const [fever, setFever] = useState();
   const [runny_nose, setRunny_nose] = useState();
   const [sore_throat, setSore_throat] = useState();
+  const [fatigue, setFatigue] = useState();
 
   const postData = async () => {
     try {
@@ -664,6 +665,7 @@ function Testing({navigation}) {
           dry_cough,
           breathing_difficulties,
           fever,
+          fatigue,
           runny_nose,
           sore_throat,
         }),
@@ -703,6 +705,12 @@ function Testing({navigation}) {
           answer={fever}
           onYesPress={() => setFever(true)}
           onNoPress={() => setFever(false)}
+        />
+        <Question
+          question={'Do you have fatigue?'}
+          answer={fatigue}
+          onYesPress={() => setFatigue(true)}
+          onNoPress={() => setFatigue(false)}
         />
         <Question
           question={'Do you have runny nose?'}
@@ -1374,8 +1382,8 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   imageStyle: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     borderRadius: 9,
     marginTop: 10,
     resizeMode: 'contain',
@@ -1410,8 +1418,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
     marginHorizontal: 10,
-    marginVertical: 20,
-    paddingVertical: 10,
+    marginTop: 10,
+    paddingVertical: 20,
   },
   stasticsCard: {
     backgroundColor: '#FFF',
@@ -1425,8 +1433,8 @@ const styles = StyleSheet.create({
   },
   warringCard: {
     backgroundColor: '#fff',
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
     borderRadius: 10,
     shadowOffset: {height: 8, width: 4},
     shadowColor: '#0003',
