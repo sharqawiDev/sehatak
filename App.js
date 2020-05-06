@@ -17,6 +17,9 @@ import {
   TouchableOpacity,
   RefreshControl,
   AsyncStorage,
+  Platform,
+  StatusBar,
+  DrawerLayoutAndroid,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 // import {createStackNavigator} from '@react-navigation/stack';
@@ -41,6 +44,11 @@ function HomeScreen({navigation}) {
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Image style={styles.logoStyle} source={require('./images/logo.png')} />
 
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <View
         style={{
           width: '90%',
@@ -107,10 +115,31 @@ function HomeScreen({navigation}) {
           maxLength={40}
         />
       </View>
-      {name === '' || ID === '' ? (
-        <Button title="Login" />
+      {Platform.OS === 'ios' ? (
+        <View>
+          {name === '' || ID === '' ? (
+            <Button
+              title="Login"
+              onPress={() => Alert.alert('Some Field Is Empty')}
+            />
+          ) : (
+            <Button title="Login" onPress={submit} />
+          )}
+        </View>
       ) : (
-        <Button title="Login" onPress={submit} />
+        <View>
+          {name === '' || ID === '' ? (
+            <Text
+              style={{color: '#0d81fe', fontSize: 20}}
+              onPress={() => Alert.alert('Some Field Is Empty')}>
+              Login
+            </Text>
+          ) : (
+            <Text style={{color: '#0d81fe', fontSize: 20}} onPress={submit}>
+              Login
+            </Text>
+          )}
+        </View>
       )}
     </View>
   );
@@ -130,12 +159,35 @@ function DetailsScreen({navigation, route}) {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
   }, [refreshing]);
+
+  const navigationView = <View style={{flex: 1, backgroundColor: '#fff'}} />;
+  const drawerLayout = () => {
+    {
+      Platform.OS === 'android' ? (
+        <DrawerLayoutAndroid
+          drawerWidth={150}
+          drawerPosition={DrawerLayoutAndroid.positions.Left}
+          renderNavigationView={() => navigationView}
+          // ref={(_drawer) => (this.drawer = _drawer)}
+          onDrawerOpen={console.log(' from android ')}
+        />
+      ) : (
+        navigation.openDrawer()
+      );
+    }
+  };
+
   return (
     <ScrollView
       contentContainerStyle={styles.scrollView}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
       <View>
         <View
           style={{
@@ -147,21 +199,26 @@ function DetailsScreen({navigation, route}) {
             style={{
               borderColor: '#000',
               resizeMode: 'stretch',
-              height: height * 0.5,
+              height: Platform.OS === 'ios' ? height * 0.58 : height * 0.6,
               width: width,
             }}
             imageStyle={{
               borderBottomRightRadius: 50,
               borderBottomLeftRadius: 50,
             }}>
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                // navigation.openDrawer();
+                drawerLayout();
+              }}>
               <Image
                 source={require('./images/menu.png')}
                 style={{
                   position: 'absolute',
                   width: 25,
                   height: 25,
-                  top: 70,
+                  top: Platform.OS === 'ios' ? 70 : 60,
                   left: 20,
                 }}
               />
@@ -173,7 +230,7 @@ function DetailsScreen({navigation, route}) {
                 width: 50,
                 height: 50,
                 borderRadius: 10,
-                top: 60,
+                top: Platform.OS === 'ios' ? 60 : 60,
                 right: 20,
               }}
             />
@@ -181,7 +238,7 @@ function DetailsScreen({navigation, route}) {
               style={{
                 fontSize: 45,
                 color: '#fff',
-                marginTop: 160,
+                marginTop: Platform.OS === 'ios' ? 160 : 120,
                 marginLeft: 30,
                 fontWeight: '300',
                 // fontFamily: 'montserrat', //tahoma, verdana, arial;
@@ -195,7 +252,7 @@ function DetailsScreen({navigation, route}) {
                 justifyContent: 'space-between',
                 alignSelf: 'center',
                 width: '90%',
-                marginTop: 80,
+                marginTop: Platform.OS === 'ios' ? 80 : 70,
               }}>
               <TouchableOpacity style={styles.card}>
                 <View
@@ -381,7 +438,7 @@ function DetailsScreen({navigation, route}) {
               flexDirection: 'row',
               justifyContent: 'space-between',
               width: '90%',
-              marginTop: 120,
+              marginTop: Platform.OS === 'ios' ? 50 : 70,
             }}>
             <TouchableOpacity style={styles.card}>
               <View
@@ -563,13 +620,34 @@ function DetailsScreen({navigation, route}) {
           </View>
         </View>
       </View>
-      <Button
-        title="Do The Test"
-        color="#39b54a"
-        onPress={() => {
-          navigation.navigate('Test');
-        }}
-      />
+      <View
+        style={{
+          alignSelf: 'center',
+          borderRadius: 20,
+          shadowRadius: 20,
+        }}>
+        {Platform.OS === 'ios' ? (
+          <Button
+            title="Do The Test"
+            color="#006837"
+            onPress={() => {
+              navigation.navigate('Test');
+            }}
+          />
+        ) : (
+          <Text
+            style={{
+              backgroundColor: 'transparent',
+              color: '#006837',
+              fontSize: 20,
+            }}
+            onPress={() => {
+              navigation.navigate('Test');
+            }}>
+            Do The Test
+          </Text>
+        )}
+      </View>
     </ScrollView>
   );
 }
@@ -682,6 +760,11 @@ function Testing({navigation}) {
 
   return (
     <SafeAreaView>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <ScrollView>
         <Text
           style={{
@@ -767,6 +850,11 @@ function Stastics({navigation}) {
 
   return (
     <SafeAreaView>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <ScrollView>
         <View style={styles.container}>
           <Text style={{alignSelf: 'center', fontSize: 25, fontWeight: 'bold'}}>
@@ -1398,7 +1486,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFF',
     width: width * 0.42,
-    height: 200,
+    height: Platform.OS === 'ios' ? 200 : 200,
     borderRadius: 20,
     shadowOffset: {height: 8, width: 4},
     shadowColor: '#0003',
