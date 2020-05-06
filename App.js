@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable radix */
 /* eslint-disable no-lone-blocks */
@@ -29,7 +30,8 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const {width, height} = Dimensions.get('window');
 
-let apiUri = 'http://sehatak-api.herokuapp.com/symptoms_qustions/add';
+let apiUriForPost = 'http://sehatak-api.herokuapp.com/symptoms_qustions/add';
+let apiUriForGet = 'http://sehatak-api.herokuapp.com/deviceTestInfo/';
 
 function HomeScreen({navigation}) {
   const [name, setName] = useState('');
@@ -153,11 +155,48 @@ function wait() {
 function DetailsScreen({navigation, route}) {
   const {name} = route.params;
 
+  let apiData = [];
+
+  const getDataFromApi = () => {
+    try {
+      fetch(apiUriForGet)
+        .then((response) => response.json())
+        .then((responseJson) => {
+          let JSONArray = responseJson.map((item, index) => {
+            console.log(item);
+            return {
+              national_id: item.national_id ? item.national_id : '',
+              systolic_pressure: item.blood_pressure[0]
+                ? item.blood_pressure[0]
+                : '',
+              diastolic_pressure: item.blood_pressure[1]
+                ? item.blood_pressure[1]
+                : '',
+              body_temperature: item.body_temperature
+                ? item.body_temperature
+                : '',
+              oxygen_percentage: item.oxygen_percentage
+                ? item.oxygen_percentage
+                : '',
+              pulse: item.pulse ? item.pulse : '',
+            };
+          });
+          apiData = JSONArray;
+          console.log('------------- Api data are: ', JSONArray);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
+    getDataFromApi();
   }, [refreshing]);
 
   const navigationView = <View style={{flex: 1, backgroundColor: '#fff'}} />;
@@ -169,14 +208,13 @@ function DetailsScreen({navigation, route}) {
           drawerPosition={DrawerLayoutAndroid.positions.Left}
           renderNavigationView={() => navigationView}
           // ref={(_drawer) => (this.drawer = _drawer)}
-          onDrawerOpen={console.log(' from android ')}
+          // onDrawerOpen={console.log(' from android ')}
         />
       ) : (
         navigation.openDrawer()
       );
     }
   };
-
   return (
     <ScrollView
       contentContainerStyle={styles.scrollView}
@@ -246,6 +284,8 @@ function DetailsScreen({navigation, route}) {
               Good Morning {'\n'}
               {name}
             </Text>
+
+            {/* {apiData.map((item) => {})} */}
             <View
               style={{
                 flexDirection: 'row',
@@ -276,9 +316,14 @@ function DetailsScreen({navigation, route}) {
                   />
                 </View>
                 <View
-                  style={{flexDirection: 'row', marginTop: 3, marginLeft: 10}}>
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 3,
+                    marginLeft: 10,
+                  }}>
                   <Text style={{fontWeight: '500', fontSize: 25}}>
                     {parseInt(75 + Math.random() * (100 - 75))}
+                    {/* {item.oxygen_percentage} */}
                   </Text>
                   <Text
                     style={{
@@ -364,9 +409,14 @@ function DetailsScreen({navigation, route}) {
                   />
                 </View>
                 <View
-                  style={{flexDirection: 'row', marginTop: 3, marginLeft: 10}}>
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 3,
+                    marginLeft: 10,
+                  }}>
                   <Text style={{fontWeight: '500', fontSize: 25}}>
                     {parseInt(60 + Math.random() * (100 - 60))}
+                    {/* {item.pulse} */}
                   </Text>
                   <Text
                     style={{
@@ -465,6 +515,7 @@ function DetailsScreen({navigation, route}) {
                 style={{flexDirection: 'row', marginTop: 3, marginLeft: 10}}>
                 <Text style={{fontWeight: '500', fontSize: 25}}>
                   {parseInt(36.1 + Math.random() * (37.2 - 36.1))}
+                  {/* {item.body_temperature} */}
                 </Text>
                 <Text
                   style={{
@@ -554,6 +605,9 @@ function DetailsScreen({navigation, route}) {
                 <Text style={{fontWeight: '500', fontSize: 25}}>
                   {parseInt(120 + Math.random() * (139 - 120))} {'/'}
                   {parseInt(80 + Math.random() * (89 - 80))}
+                  {/* {item.systolic_pressure}
+                  {'/'}
+                  {item.diastolic_pressure} */}
                 </Text>
                 <Text
                   style={{
@@ -723,8 +777,6 @@ const Question = ({question, onYesPress, onNoPress, answer}) => {
 };
 
 function Testing({navigation}) {
-  // const [national_id, setNational_id] = useState('1010101010');
-  // const [full_name, setFull_name] = useState('userName');
   const [dry_cough, setDry_cough] = useState();
   const [breathing_difficulties, setBreathing_difficulties] = useState();
   const [fever, setFever] = useState();
@@ -736,7 +788,7 @@ function Testing({navigation}) {
     let user = await AsyncStorage.getItem('user');
     user = JSON.parse(user);
     try {
-      fetch(apiUri, {
+      fetch(apiUriForPost, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
