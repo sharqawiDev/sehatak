@@ -27,11 +27,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import {LineChart} from 'react-native-chart-kit';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {set} from 'react-native-reanimated';
 
 const {width, height} = Dimensions.get('window');
 
 let apiUriForPost = 'http://sehatak-api.herokuapp.com/symptoms_qustions/add';
-let apiUriForGet = 'http://sehatak-api.herokuapp.com/deviceTestInfo/';
 
 function HomeScreen({navigation}) {
   const [name, setName] = useState('');
@@ -39,7 +39,7 @@ function HomeScreen({navigation}) {
 
   const submit = async () => {
     AsyncStorage.setItem('user', JSON.stringify({name, ID}));
-    navigation.navigate('Details', {name});
+    navigation.navigate('Details', {name, ID});
   };
 
   return (
@@ -99,7 +99,7 @@ function HomeScreen({navigation}) {
             alignSelf: 'flex-start',
             marginLeft: 10,
           }}>
-          ID Number
+          National id
         </Text>
         <TextInput
           placeholder="123456789"
@@ -153,24 +153,29 @@ function wait() {
   });
 }
 function DetailsScreen({navigation, route}) {
-  const {name} = route.params;
+  const {name, ID} = route.params;
+  const [loading, setLoading] = useState(false);
+  const [apiData, setApiData] = useState([]);
 
-  let apiData = [];
+  let apiUriForGet = `http://sehatak-api.herokuapp.com/deviceTestInfo/${ID}`;
 
-  const getDataFromApi = () => {
+  // let apiData = [];
+
+  const getDataFromApi = async () => {
     try {
-      fetch(apiUriForGet)
+      setLoading(true);
+      await fetch(apiUriForGet)
         .then((response) => response.json())
         .then((responseJson) => {
           let JSONArray = responseJson.map((item, index) => {
             console.log(item);
             return {
               national_id: item.national_id ? item.national_id : '',
-              systolic_pressure: item.blood_pressure[0]
-                ? item.blood_pressure[0]
+              systolic_pressure: item.blood_pressure.systolic_pressure
+                ? item.blood_pressure.systolic_pressure
                 : '',
-              diastolic_pressure: item.blood_pressure[1]
-                ? item.blood_pressure[1]
+              diastolic_pressure: item.blood_pressure.diastolic_pressure
+                ? item.blood_pressure.diastolic_pressure
                 : '',
               body_temperature: item.body_temperature
                 ? item.body_temperature
@@ -181,7 +186,8 @@ function DetailsScreen({navigation, route}) {
               pulse: item.pulse ? item.pulse : '',
             };
           });
-          apiData = JSONArray;
+          setApiData(JSONArray);
+          setLoading(false);
           console.log('------------- Api data are: ', JSONArray);
         })
         .catch((error) => {
@@ -219,7 +225,12 @@ function DetailsScreen({navigation, route}) {
     <ScrollView
       contentContainerStyle={styles.scrollView}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          progressBackgroundColor="#39b54a"
+          tintColor="#39b54a"
+        />
       }>
       <StatusBar
         translucent
@@ -227,72 +238,268 @@ function DetailsScreen({navigation, route}) {
         barStyle="light-content"
       />
       <View>
-        <View
-          style={{
-            alignItems: 'center',
-            paddingBottom: 20,
-          }}>
-          <ImageBackground
-            source={require('./images/bg.png')}
+        {apiData.map((item) => (
+          <View
             style={{
-              borderColor: '#000',
-              resizeMode: 'stretch',
-              height: Platform.OS === 'ios' ? height * 0.58 : height * 0.6,
-              width: width,
-            }}
-            imageStyle={{
-              borderBottomRightRadius: 50,
-              borderBottomLeftRadius: 50,
+              alignItems: 'center',
+              paddingBottom: 20,
             }}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => {
-                // navigation.openDrawer();
-                drawerLayout();
+            <ImageBackground
+              source={require('./images/bg.png')}
+              style={{
+                borderColor: '#000',
+                resizeMode: 'stretch',
+                height: Platform.OS === 'ios' ? height * 0.58 : height * 0.6,
+                width: width,
+              }}
+              imageStyle={{
+                borderBottomRightRadius: 50,
+                borderBottomLeftRadius: 50,
               }}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                  // navigation.openDrawer();
+                  drawerLayout();
+                }}>
+                <Image
+                  source={require('./images/menu.png')}
+                  style={{
+                    position: 'absolute',
+                    width: 25,
+                    height: 25,
+                    top: Platform.OS === 'ios' ? 70 : 60,
+                    left: 20,
+                  }}
+                />
+              </TouchableOpacity>
               <Image
-                source={require('./images/menu.png')}
+                source={require('./images/avatar.jpg')}
                 style={{
                   position: 'absolute',
-                  width: 25,
-                  height: 25,
-                  top: Platform.OS === 'ios' ? 70 : 60,
-                  left: 20,
+                  width: 50,
+                  height: 50,
+                  borderRadius: 10,
+                  top: Platform.OS === 'ios' ? 60 : 60,
+                  right: 20,
                 }}
               />
-            </TouchableOpacity>
-            <Image
-              source={require('./images/avatar.jpg')}
-              style={{
-                position: 'absolute',
-                width: 50,
-                height: 50,
-                borderRadius: 10,
-                top: Platform.OS === 'ios' ? 60 : 60,
-                right: 20,
-              }}
-            />
-            <Text
-              style={{
-                fontSize: 45,
-                color: '#fff',
-                marginTop: Platform.OS === 'ios' ? 160 : 120,
-                marginLeft: 30,
-                fontWeight: '300',
-                // fontFamily: 'montserrat', //tahoma, verdana, arial;
-              }}>
-              Good Morning {'\n'}
-              {name}
-            </Text>
+              <Text
+                style={{
+                  fontSize: 45,
+                  color: '#fff',
+                  marginTop: Platform.OS === 'ios' ? 160 : 120,
+                  marginLeft: 30,
+                  fontWeight: '300',
+                  // fontFamily: 'montserrat', //tahoma, verdana, arial;
+                }}>
+                Good Morning {'\n'}
+                {name}
+              </Text>
 
-            {/* {apiData.map((item) => {})} */}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignSelf: 'center',
+                  width: '90%',
+                  marginTop: Platform.OS === 'ios' ? 80 : 70,
+                }}>
+                <TouchableOpacity style={styles.card}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginTop: 10,
+                    }}>
+                    <Text
+                      style={{
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        marginLeft: 10,
+                        fontWeight: '600',
+                      }}>
+                      Oxygen
+                    </Text>
+                    <Image
+                      source={require('./images/oxygen.png')}
+                      style={styles.imageStyle}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: 3,
+                      marginLeft: 10,
+                    }}>
+                    <Text style={{fontWeight: '500', fontSize: 25}}>
+                      {/* {parseInt(75 + Math.random() * (100 - 75))} */}
+                      {item.oxygen_percentage}
+                    </Text>
+                    <Text
+                      style={{
+                        fontWeight: '500',
+                        fontSize: 12,
+                        color: 'grey',
+                        alignSelf: 'center',
+                        marginLeft: 5,
+                      }}>
+                      mL / mmHg
+                    </Text>
+                  </View>
+                  <LineChart
+                    data={{
+                      labels: [
+                        'January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',
+                      ],
+                      datasets: [
+                        {
+                          data: [
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                          ],
+                        },
+                      ],
+                    }}
+                    width={172} // from react-native
+                    height={100}
+                    yAxisInterval={1} // optional, defaults to 1
+                    chartConfig={{
+                      backgroundColor: '#000',
+                      backgroundGradientFrom: '#fff',
+                      backgroundGradientTo: '#fff',
+                      decimalPlaces: 2, // optional, defaults to 2dp
+                      color: (opacity = 1) => `rgba(000, 000, 000, ${opacity})`,
+                      labelColor: (opacity = 1) =>
+                        `rgba(000, 000, 000, ${opacity})`,
+                      style: {
+                        borderRadius: 16,
+                      },
+                      propsForDots: {
+                        r: '3',
+                        strokeWidth: '1',
+                        stroke: '#000',
+                      },
+                    }}
+                    bezier
+                    style={{
+                      marginVertical: 8,
+                      borderRadius: 16,
+                      alignSelf: 'center',
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.card}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginTop: 10,
+                    }}>
+                    <Text
+                      style={{
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        marginLeft: 10,
+                        fontWeight: '600',
+                      }}>
+                      Pulse
+                    </Text>
+                    <Image
+                      source={require('./images/pulse.png')}
+                      style={styles.imageStyle}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: 3,
+                      marginLeft: 10,
+                    }}>
+                    <Text style={{fontWeight: '500', fontSize: 25}}>
+                      {/* {parseInt(60 + Math.random() * (100 - 60))} */}
+                      {item.pulse}
+                    </Text>
+                    <Text
+                      style={{
+                        fontWeight: '500',
+                        fontSize: 12,
+                        color: 'grey',
+                        alignSelf: 'center',
+                        marginLeft: 5,
+                      }}>
+                      BPM
+                    </Text>
+                  </View>
+                  <LineChart
+                    data={{
+                      labels: [
+                        'January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',
+                      ],
+                      datasets: [
+                        {
+                          data: [
+                            parseInt(75 + Math.random() * (100 - 75)),
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                            Math.random() * 100,
+                          ],
+                        },
+                      ],
+                    }}
+                    width={172} // from react-native
+                    height={100}
+                    yAxisInterval={1} // optional, defaults to 1
+                    chartConfig={{
+                      backgroundColor: '#000',
+                      backgroundGradientFrom: '#fff',
+                      backgroundGradientTo: '#fff',
+                      decimalPlaces: 2, // optional, defaults to 2dp
+                      color: (opacity = 1) => `rgba(000, 000, 000, ${opacity})`,
+                      labelColor: (opacity = 1) =>
+                        `rgba(000, 000, 000, ${opacity})`,
+                      style: {
+                        borderRadius: 16,
+                      },
+                      propsForDots: {
+                        r: '3',
+                        strokeWidth: '1',
+                        stroke: '#000',
+                      },
+                    }}
+                    bezier
+                    style={{
+                      marginVertical: 8,
+                      borderRadius: 16,
+                      alignSelf: 'center',
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                alignSelf: 'center',
                 width: '90%',
-                marginTop: Platform.OS === 'ios' ? 80 : 70,
+                marginTop: Platform.OS === 'ios' ? 50 : 70,
               }}>
               <TouchableOpacity style={styles.card}>
                 <View
@@ -308,22 +515,18 @@ function DetailsScreen({navigation, route}) {
                       marginLeft: 10,
                       fontWeight: '600',
                     }}>
-                    Oxygen
+                    Temperature
                   </Text>
                   <Image
-                    source={require('./images/oxygen.png')}
+                    source={require('./images/temp.png')}
                     style={styles.imageStyle}
                   />
                 </View>
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    marginTop: 3,
-                    marginLeft: 10,
-                  }}>
+                  style={{flexDirection: 'row', marginTop: 3, marginLeft: 10}}>
                   <Text style={{fontWeight: '500', fontSize: 25}}>
-                    {parseInt(75 + Math.random() * (100 - 75))}
-                    {/* {item.oxygen_percentage} */}
+                    {/* {parseInt(36.1 + Math.random() * (37.2 - 36.1))} */}
+                    {item.body_temperature}
                   </Text>
                   <Text
                     style={{
@@ -333,7 +536,7 @@ function DetailsScreen({navigation, route}) {
                       alignSelf: 'center',
                       marginLeft: 5,
                     }}>
-                    mL / mmHg
+                    °C
                   </Text>
                 </View>
                 <LineChart
@@ -401,22 +604,21 @@ function DetailsScreen({navigation, route}) {
                       marginLeft: 10,
                       fontWeight: '600',
                     }}>
-                    Pulse
+                    Blood{'\n'}Pressure
                   </Text>
                   <Image
-                    source={require('./images/pulse.png')}
+                    source={require('./images/pressure.png')}
                     style={styles.imageStyle}
                   />
                 </View>
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    marginTop: 3,
-                    marginLeft: 10,
-                  }}>
+                  style={{flexDirection: 'row', marginTop: 3, marginLeft: 10}}>
                   <Text style={{fontWeight: '500', fontSize: 25}}>
-                    {parseInt(60 + Math.random() * (100 - 60))}
-                    {/* {item.pulse} */}
+                    {/* {parseInt(120 + Math.random() * (139 - 120))} {'/'}
+                    {parseInt(80 + Math.random() * (89 - 80))} */}
+                    {item.systolic_pressure}
+                    {'/'}
+                    {item.diastolic_pressure}
                   </Text>
                   <Text
                     style={{
@@ -426,7 +628,7 @@ function DetailsScreen({navigation, route}) {
                       alignSelf: 'center',
                       marginLeft: 5,
                     }}>
-                    BPM
+                    mmHg
                   </Text>
                 </View>
                 <LineChart
@@ -442,7 +644,6 @@ function DetailsScreen({navigation, route}) {
                     datasets: [
                       {
                         data: [
-                          parseInt(75 + Math.random() * (100 - 75)),
                           Math.random() * 100,
                           Math.random() * 100,
                           Math.random() * 100,
@@ -482,198 +683,10 @@ function DetailsScreen({navigation, route}) {
                 />
               </TouchableOpacity>
             </View>
-          </ImageBackground>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: '90%',
-              marginTop: Platform.OS === 'ios' ? 50 : 70,
-            }}>
-            <TouchableOpacity style={styles.card}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 10,
-                }}>
-                <Text
-                  style={{
-                    alignSelf: 'center',
-                    fontSize: 16,
-                    marginLeft: 10,
-                    fontWeight: '600',
-                  }}>
-                  Temperature
-                </Text>
-                <Image
-                  source={require('./images/temp.png')}
-                  style={styles.imageStyle}
-                />
-              </View>
-              <View
-                style={{flexDirection: 'row', marginTop: 3, marginLeft: 10}}>
-                <Text style={{fontWeight: '500', fontSize: 25}}>
-                  {parseInt(36.1 + Math.random() * (37.2 - 36.1))}
-                  {/* {item.body_temperature} */}
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: '500',
-                    fontSize: 12,
-                    color: 'grey',
-                    alignSelf: 'center',
-                    marginLeft: 5,
-                  }}>
-                  °C
-                </Text>
-              </View>
-              <LineChart
-                data={{
-                  labels: [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                  ],
-                  datasets: [
-                    {
-                      data: [
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                      ],
-                    },
-                  ],
-                }}
-                width={172} // from react-native
-                height={100}
-                yAxisInterval={1} // optional, defaults to 1
-                chartConfig={{
-                  backgroundColor: '#000',
-                  backgroundGradientFrom: '#fff',
-                  backgroundGradientTo: '#fff',
-                  decimalPlaces: 2, // optional, defaults to 2dp
-                  color: (opacity = 1) => `rgba(000, 000, 000, ${opacity})`,
-                  labelColor: (opacity = 1) =>
-                    `rgba(000, 000, 000, ${opacity})`,
-                  style: {
-                    borderRadius: 16,
-                  },
-                  propsForDots: {
-                    r: '3',
-                    strokeWidth: '1',
-                    stroke: '#000',
-                  },
-                }}
-                bezier
-                style={{
-                  marginVertical: 8,
-                  borderRadius: 16,
-                  alignSelf: 'center',
-                }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.card}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 10,
-                }}>
-                <Text
-                  style={{
-                    alignSelf: 'center',
-                    fontSize: 16,
-                    marginLeft: 10,
-                    fontWeight: '600',
-                  }}>
-                  Blood{'\n'}Pressure
-                </Text>
-                <Image
-                  source={require('./images/pressure.png')}
-                  style={styles.imageStyle}
-                />
-              </View>
-              <View
-                style={{flexDirection: 'row', marginTop: 3, marginLeft: 10}}>
-                <Text style={{fontWeight: '500', fontSize: 25}}>
-                  {parseInt(120 + Math.random() * (139 - 120))} {'/'}
-                  {parseInt(80 + Math.random() * (89 - 80))}
-                  {/* {item.systolic_pressure}
-                  {'/'}
-                  {item.diastolic_pressure} */}
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: '500',
-                    fontSize: 12,
-                    color: 'grey',
-                    alignSelf: 'center',
-                    marginLeft: 5,
-                  }}>
-                  mmHg
-                </Text>
-              </View>
-              <LineChart
-                data={{
-                  labels: [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                  ],
-                  datasets: [
-                    {
-                      data: [
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                      ],
-                    },
-                  ],
-                }}
-                width={172} // from react-native
-                height={100}
-                yAxisInterval={1} // optional, defaults to 1
-                chartConfig={{
-                  backgroundColor: '#000',
-                  backgroundGradientFrom: '#fff',
-                  backgroundGradientTo: '#fff',
-                  decimalPlaces: 2, // optional, defaults to 2dp
-                  color: (opacity = 1) => `rgba(000, 000, 000, ${opacity})`,
-                  labelColor: (opacity = 1) =>
-                    `rgba(000, 000, 000, ${opacity})`,
-                  style: {
-                    borderRadius: 16,
-                  },
-                  propsForDots: {
-                    r: '3',
-                    strokeWidth: '1',
-                    stroke: '#000',
-                  },
-                }}
-                bezier
-                style={{
-                  marginVertical: 8,
-                  borderRadius: 16,
-                  alignSelf: 'center',
-                }}
-              />
-            </TouchableOpacity>
           </View>
-        </View>
+        ))}
       </View>
+
       <View
         style={{
           alignSelf: 'center',
