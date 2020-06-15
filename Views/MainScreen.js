@@ -18,6 +18,7 @@ import {
   DrawerLayoutAndroid,
   Dimensions,
   StyleSheet,
+  I18nManager,
 } from 'react-native';
 
 import {LineChart} from 'react-native-chart-kit';
@@ -177,7 +178,7 @@ function MainScreen({navigation, route}) {
                   fontWeight: '300',
                   // fontFamily: 'montserrat', //tahoma, verdana, arial;
                 }}>
-                Good Morning {'\n'}
+                {I18nManager.isRTL ? 'أهلا بك' : 'welcome'} {'\n'}
                 {name}
               </Text>
 
@@ -203,7 +204,7 @@ function MainScreen({navigation, route}) {
                         marginLeft: 10,
                         fontWeight: '600',
                       }}>
-                      Oxygen
+                      {I18nManager.isRTL ? 'الآكسجين' : 'Oxygen'}
                     </Text>
                     <Image
                       source={require('../images/oxygen.png')}
@@ -228,7 +229,8 @@ function MainScreen({navigation, route}) {
                         alignSelf: 'center',
                         marginLeft: 5,
                       }}>
-                      mL / mmHg
+                      {/* mL / mmHg */}
+                      {I18nManager.isRTL ? 'مل / مم زئبق' : 'mL / mmHg'}
                     </Text>
                   </View>
                   <LineChart
@@ -296,7 +298,7 @@ function MainScreen({navigation, route}) {
                         marginLeft: 10,
                         fontWeight: '600',
                       }}>
-                      Pulse
+                      {I18nManager.isRTL ? 'النبض' : 'Pulse'}
                     </Text>
                     <Image
                       source={require('../images/pulse.png')}
@@ -321,7 +323,7 @@ function MainScreen({navigation, route}) {
                         alignSelf: 'center',
                         marginLeft: 5,
                       }}>
-                      BPM
+                      {I18nManager.isRTL ? 'نبضة في الدقيقة' : 'BPM'}
                     </Text>
                   </View>
                   <LineChart
@@ -399,7 +401,7 @@ function MainScreen({navigation, route}) {
                       marginLeft: 10,
                       fontWeight: '600',
                     }}>
-                    Temperature
+                    {I18nManager.isRTL ? 'الحرارة' : 'Temperature'}
                   </Text>
                   <Image
                     source={require('../images/temp.png')}
@@ -424,7 +426,7 @@ function MainScreen({navigation, route}) {
                       alignSelf: 'center',
                       marginLeft: 5,
                     }}>
-                    °C
+                    {I18nManager.isRTL ? 'درجة حرارة  الجسم' : '°C'}
                   </Text>
                 </View>
                 <LineChart
@@ -492,7 +494,9 @@ function MainScreen({navigation, route}) {
                       marginLeft: 10,
                       fontWeight: '600',
                     }}>
-                    Blood{'\n'}Pressure
+                    {I18nManager.isRTL ? 'الدم' : 'Blood'}
+                    {'\n'}
+                    {I18nManager.isRTL ? 'ضغط' : 'Pressure'}
                   </Text>
                   <Image
                     source={require('../images/pressure.png')}
@@ -520,7 +524,7 @@ function MainScreen({navigation, route}) {
                       alignSelf: 'center',
                       marginLeft: 5,
                     }}>
-                    mmHg
+                    {I18nManager.isRTL ? 'مم زئبق' : 'mmHg'}
                   </Text>
                 </View>
                 <LineChart
@@ -603,7 +607,7 @@ function MainScreen({navigation, route}) {
             onPress={() => {
               navigation.navigate('Test');
             }}>
-            Do The Test
+            {I18nManager.isRTL ? 'قم بالإختبار' : 'Do The Test'}
           </Text>
         )}
       </View>

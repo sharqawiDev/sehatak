@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   AsyncStorage,
   StatusBar,
+  I18nManager,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -54,7 +55,7 @@ const Question = ({question, onYesPress, onNoPress, answer}) => {
               onPress={onYesPress}>
               <Text
                 style={{color: yesTextColor, fontSize: 20, fontWeight: 'bold'}}>
-                YES
+                {I18nManager.isRTL ? 'نعم' : 'YES'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -74,7 +75,7 @@ const Question = ({question, onYesPress, onNoPress, answer}) => {
               onPress={onNoPress}>
               <Text
                 style={{color: noTextColor, fontSize: 20, fontWeight: 'bold'}}>
-                NO
+                {I18nManager.isRTL ? 'لا' : 'NO'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -133,41 +134,57 @@ function Test({navigation}) {
             marginTop: 20,
             fontWeight: 'bold',
           }}>
-          Please Answer the following questions:
+          {I18nManager.isRTL
+            ? 'الرجاء الإجابة على الأسئلة التالية'
+            : 'Please Answer the following questions:'}
         </Text>
 
         <Question
-          question={'Do you have a dry cough?'}
+          question={
+            I18nManager.isRTL ? 'هل لديك سعال جاف' : 'Do you have a dry cough?'
+          }
           answer={dry_cough}
           onYesPress={() => setDry_cough(true)}
           onNoPress={() => setDry_cough(false)}
         />
         <Question
-          question={'Do you have breathing difficulties?'}
+          question={
+            I18nManager.isRTL
+              ? 'هل تعاني من صعوبات في التنفس؟'
+              : 'Do you have breathing difficulties?'
+          }
           answer={breathing_difficulties}
           onYesPress={() => setBreathing_difficulties(true)}
           onNoPress={() => setBreathing_difficulties(false)}
         />
         <Question
-          question={'Do you have fever?'}
+          question={I18nManager.isRTL ? 'هل لديك حمى؟' : 'Do you have a fever?'}
           answer={fever}
           onYesPress={() => setFever(true)}
           onNoPress={() => setFever(false)}
         />
         <Question
-          question={'Do you have fatigue?'}
+          question={I18nManager.isRTL ? 'هل لديك تعب؟' : 'Do you have fatigue?'}
           answer={fatigue}
           onYesPress={() => setFatigue(true)}
           onNoPress={() => setFatigue(false)}
         />
         <Question
-          question={'Do you have runny nose?'}
+          question={
+            I18nManager.isRTL
+              ? 'هل لديك سيلان فى الأنف؟'
+              : 'Do you have a runny nose?'
+          }
           answer={runny_nose}
           onYesPress={() => setRunny_nose(true)}
           onNoPress={() => setRunny_nose(false)}
         />
         <Question
-          question={'Do you have sore throat?'}
+          question={
+            I18nManager.isRTL
+              ? 'هل لديك التهاب في الحلق'
+              : 'Do you have a sore throat?'
+          }
           answer={sore_throat}
           onYesPress={() => setSore_throat(true)}
           onNoPress={() => setSore_throat(false)}
@@ -184,7 +201,11 @@ function Test({navigation}) {
             width: '100%',
           }}
           onPress={() => {
-            Alert.alert('Thanks for doing the test 😘');
+            Alert.alert(
+              I18nManager.isRTL
+                ? ' شكرًا لإجراء الاختبار 😘'
+                : 'Thanks for doing the test 😘',
+            );
             navigation.goBack();
             postData();
           }}>
@@ -193,9 +214,10 @@ function Test({navigation}) {
               color: 'white',
               fontSize: 20,
               padding: 20,
+              paddingBottom: 25,
               fontWeight: '500',
             }}>
-            Submit
+            {I18nManager.isRTL ? 'إرسال' : 'Submit'}
           </Text>
         </TouchableOpacity>
       </ScrollView>

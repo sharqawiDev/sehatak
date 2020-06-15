@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Image, TouchableOpacity} from 'react-native';
+import {Image, TouchableOpacity, I18nManager} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import Login from './Views/Login';
@@ -18,7 +18,7 @@ function Navigation({navigation}) {
           name="Details"
           component={MainScreen}
           options={{
-            title: 'Home Page',
+            title: I18nManager.isRTL ? 'الصفحة الرئيسية' : 'Home Page',
             headerStyle: {
               backgroundColor: '#006837',
             },
@@ -40,7 +40,7 @@ function Navigation({navigation}) {
           name="stastics"
           component={History}
           options={{
-            title: 'history',
+            title: I18nManager.isRTL ? 'الفحوصات الأخيرة' : 'history',
             headerStyle: {
               backgroundColor: '#006837',
             },
@@ -54,7 +54,7 @@ function Navigation({navigation}) {
           name="Home"
           component={Login}
           options={{
-            title: 'Logout',
+            title: I18nManager.isRTL ? 'تسجيل خروج' : 'Logout',
             headerStyle: {
               backgroundColor: '#006837',
             },

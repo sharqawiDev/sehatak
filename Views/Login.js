@@ -11,6 +11,7 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
+  I18nManager,
 } from 'react-native';
 
 function Login({navigation}) {
@@ -45,16 +46,17 @@ function Login({navigation}) {
             alignSelf: 'flex-start',
             marginLeft: 10,
           }}>
-          Full Name
+          {I18nManager.isRTL ? 'الإسم الكامل' : 'Full Name'}
         </Text>
         <TextInput
-          placeholder="Name"
+          placeholder={I18nManager.isRTL ? 'الإسم' : 'Name'}
           style={{
             backgroundColor: '#fff',
             width: '100%',
             height: 48,
             borderRadius: 20,
             paddingLeft: 10,
+            writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr',
             marginTop: 10,
           }}
           keyboardType="default"
@@ -79,15 +81,17 @@ function Login({navigation}) {
             alignSelf: 'flex-start',
             marginLeft: 10,
           }}>
-          National id
+          {I18nManager.isRTL ? 'الهوية الوطنية' : 'National id'}
         </Text>
         <TextInput
-          placeholder="123456789"
+          placeholder={I18nManager.isRTL ? '١٢٣٤٦٧٨٩' : '123456789'}
+          textAlign={I18nManager.isRTL ? 'right' : 'left'}
           style={{
             backgroundColor: '#fff',
             width: '100%',
             height: 48,
             borderRadius: 20,
+            writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr',
             paddingLeft: 10,
             marginTop: 10,
           }}
@@ -102,7 +106,7 @@ function Login({navigation}) {
           {name === '' || ID === '' ? (
             <Button
               title="Login"
-              onPress={() => Alert.alert('Some Field Is Empty')}
+              onPress={() => Alert.alert('Some field are ampty')}
             />
           ) : (
             <Button title="Login" onPress={submit} />
@@ -113,12 +117,12 @@ function Login({navigation}) {
           {name === '' || ID === '' ? (
             <Text
               style={{color: '#0d81fe', fontSize: 20}}
-              onPress={() => Alert.alert('Some Field Is Empty')}>
-              Login
+              onPress={() => Alert.alert('Some field are empty')}>
+              {I18nManager.isRTL ? 'تسجيل دخول' : 'Login'}
             </Text>
           ) : (
             <Text style={{color: '#0d81fe', fontSize: 20}} onPress={submit}>
-              Login
+              {I18nManager.isRTL ? 'تسجيل دخول' : 'Login'}
             </Text>
           )}
         </View>
